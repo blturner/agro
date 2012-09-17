@@ -7,6 +7,7 @@ import re
 from django.db import models
 from django.contrib import admin
 from django.utils.encoding import smart_unicode
+from django.utils.timezone import get_current_timezone, make_aware
 from django.template import Template
 
 from agro.sources import utils
@@ -14,6 +15,7 @@ from agro.models import Entry
 
 from tagging.fields import TagField
 
+current_timezone = get_current_timezone()
 log = logging.getLogger('agro.sources.flickr')
 
 # model definition
@@ -113,7 +115,7 @@ def retrieve(force, **args):
 
         res = res['photos']
         for photo in res['photo']:
-            photo_up_time = datetime.datetime.fromtimestamp(float(photo['lastupdate']))
+            photo_up_time = make_aware(datetime.datetime.fromtimestamp(float(photo['lastupdate'])), current_timezone)
             if last_update <= photo_up_time:
                 log.debug('current photo upload time: %s', photo_up_time)
                 _handle_photo(flickr, photo, username)

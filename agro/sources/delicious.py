@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib import admin
+from django.utils.timezone import get_current_timezone, make_aware
 from agro.sources import utils
 from agro.models import Entry
 from django.template import Template
@@ -7,6 +8,7 @@ from tagging.fields import TagField
 import datetime
 import logging
 
+current_timezone = get_current_timezone()
 log = logging.getLogger('agro.sources.delicious')
 
 # model definition
@@ -57,7 +59,8 @@ def retrieve(force, **args):
             if password and force:
                 _handle_rss_bookmark(mark, username)
                 continue
-            dt = utils.parsedate(mark['dt']) 
+            dt = utils.parsedate(mark['dt'])
+            dt = make_aware(dt, current_timezone)
             if dt > last_update:
                 _handle_bookmark(mark, dt, username)
             else:

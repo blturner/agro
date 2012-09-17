@@ -6,12 +6,14 @@ from django.db import transaction
 from django.contrib import admin
 from django.template import Template
 from django.utils.encoding import smart_unicode
+from django.utils.timezone import get_current_timezone, make_aware
 
 from agro.sources import utils
 from agro.models import Entry
 
 from tagging.fields import TagField
 
+current_timezone = get_current_timezone()
 log = logging.getLogger('agro.sources.lastfm')
 
 # model definition
@@ -76,6 +78,7 @@ def retrieve(force, **args):
         for song in songs:
             try:
                 dt = datetime.datetime.fromtimestamp(float(song.find('date').get('uts')))
+                dt = make_aware(dt, current_timezone)
             except Exception, e:
                 log.error(type(song))
                 log.error(song.find('date'))
