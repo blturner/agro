@@ -59,6 +59,7 @@ def retrieve(force, **args):
     song_resp       = utils.get_remote_data(url)
 
     last_update = datetime.datetime.fromtimestamp(0)
+    last_update = make_aware(last_update, current_timezone)
     if force:
         log.info("Forcing update of all available songs.")
     else:
