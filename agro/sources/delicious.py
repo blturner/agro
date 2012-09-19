@@ -38,6 +38,7 @@ def retrieve(force, **args):
     rformat = 'json'
 
     last_update = datetime.datetime.fromtimestamp(0)
+    last_update = make_aware(last_update, current_timezone)
     if force:
         if password:
             url = "https://api.del.icio.us/v1/posts/all"
