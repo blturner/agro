@@ -96,6 +96,7 @@ def retrieve(force, **args):
     flickr = FClient(args['api_key'])
 
     last_update = datetime.datetime.fromtimestamp(0)
+    last_update = make_aware(last_update, current_timezone)
     if force:
         log.info("Forcing update of all available photos")
     else:
